@@ -6,760 +6,440 @@
 <title>Aussie Tax Savings Calculator</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #181c26;
-    --surface2: #1e2330;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #f0f2f7;
-    --muted: #8b92a8;
-    --hint: #555d75;
-    --green: #2dd4a0;
-    --green-bg: rgba(45,212,160,0.1);
-    --red: #f87171;
-    --red-bg: rgba(248,113,113,0.1);
-    --blue: #60a5fa;
-    --blue-bg: rgba(96,165,250,0.1);
-    --amber: #fbbf24;
-    --amber-bg: rgba(251,191,36,0.08);
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
-
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo {
-    width: 36px; height: 36px;
-    background: var(--green);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-
-  .header-text h1 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-
-  .header-text p {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 1px;
-  }
-
-  .disclaimer {
-    background: var(--amber-bg);
-    border: 1px solid rgba(251,191,36,0.2);
-    color: var(--amber);
-    font-size: 12px;
-    padding: 8px 32px;
-    text-align: center;
-  }
-
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 32px 24px;
-  }
-
-  .two-col {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 24px;
-    align-items: start;
-  }
-
-  @media (max-width: 720px) {
-    .two-col { grid-template-columns: 1fr; }
-    .header { padding: 16px 20px; }
-    .main { padding: 20px 16px; }
-  }
-
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-
-  .panel-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--hint);
-    margin-bottom: 16px;
-  }
-
-  .field { margin-bottom: 18px; }
-  .field:last-child { margin-bottom: 0; }
-
-  .field-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-
-  .field-label span:first-child {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .field-label .fval {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-  }
-
-  input[type=range] {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--border2);
-    outline: none;
-  }
-
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: var(--green);
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-  select {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: var(--radius-sm);
-    outline: none;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b92a8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    padding-right: 28px;
-  }
-
-  .stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .stat {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-  }
-
-  .stat .sl { font-size: 11px; color: var(--hint); margin-bottom: 4px; }
-  .stat .sv { font-size: 18px; font-weight: 600; font-family: 'DM Mono', monospace; }
-  .stat .sv.red { color: var(--red); }
-  .stat .sv.green { color: var(--green); }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 20px 0;
-  }
-
-  .strat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 20px;
-  }
-
-  .strat-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: left;
-    width: 100%;
-    color: var(--muted);
-  }
-
-  .strat-btn:hover {
-    border-color: var(--border2);
-    background: var(--surface2);
-    color: var(--text);
-  }
-
-  .strat-btn.active {
-    border-color: rgba(45,212,160,0.4);
-    background: var(--green-bg);
-    color: var(--green);
-  }
-
-  .strat-btn .sicon { font-size: 18px; flex-shrink: 0; }
-  .strat-btn .sinfo .sname { font-size: 13px; font-weight: 500; display: block; }
-  .strat-btn .sinfo .sdesc { font-size: 11px; opacity: 0.7; display: block; margin-top: 1px; }
-
-  .right-col { display: flex; flex-direction: column; gap: 16px; }
-
-  .params-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-  .params-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--hint); margin-bottom: 16px; }
-
-  .result-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-
-  .result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-
-  .result-row:last-child { border-bottom: none; }
-  .result-row .rl { color: var(--muted); }
-  .result-row .rv { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
-  .result-row .rv.green { color: var(--green); }
-  .result-row .rv.red { color: var(--red); }
-
-  .savings-banner {
-    background: var(--green-bg);
-    border: 1px solid rgba(45,212,160,0.2);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    margin-top: 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .savings-banner .sb-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .savings-banner .sb-text { font-size: 13px; color: var(--green); line-height: 1.5; }
-  .savings-banner .sb-big { font-size: 24px; font-weight: 600; font-family: 'DM Mono', monospace; display: block; margin-bottom: 2px; }
-
-  .warning-banner {
-    background: var(--red-bg);
-    border: 1px solid rgba(248,113,113,0.2);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--red);
-    line-height: 1.5;
-  }
-
-  .note-banner {
-    background: var(--blue-bg);
-    border: 1px solid rgba(96,165,250,0.2);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    margin-top: 12px;
-    font-size: 12px;
-    color: var(--blue);
-    line-height: 1.5;
-  }
-
-  .footer {
-    text-align: center;
-    padding: 32px 24px;
-    font-size: 12px;
-    color: var(--hint);
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-  }
-
-  .badge {
-    display: inline-block;
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 20px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
-
-  .badge.easy { background: var(--green-bg); color: var(--green); }
-  .badge.med { background: var(--amber-bg); color: var(--amber); }
-  .badge.hard { background: var(--red-bg); color: var(--red); }
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0f1117;--surface:#181c26;--surface2:#1e2330;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0f2f7;--muted:#8b92a8;--hint:#555d75;
+  --green:#2dd4a0;--green-bg:rgba(45,212,160,0.1);--green-border:rgba(45,212,160,0.25);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.1);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.08);--blue-border:rgba(96,165,250,0.2);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.08);--amber-border:rgba(251,191,36,0.2);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.1);
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:12px;}
+.logo{width:34px;height:34px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.header h1{font-size:15px;font-weight:600;color:var(--text);}
+.header p{font-size:12px;color:var(--muted);}
+.disclaimer{background:var(--amber-bg);border-bottom:1px solid var(--amber-border);color:var(--amber);font-size:12px;padding:8px 28px;text-align:center;}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px;}
+.summary-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;}
+.income-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+.income-row label{font-size:13px;color:var(--muted);white-space:nowrap;}
+.income-row input[type=range]{width:200px;flex-shrink:0;}
+.income-row .ival{font-size:15px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text);min-width:90px;}
+.income-row select{background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 28px 7px 10px;border-radius:var(--radius-sm);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b92a8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+.stat{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;}
+.stat .sl{font-size:11px;color:var(--hint);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+.stat .sv{font-size:17px;font-weight:600;font-family:'DM Mono',monospace;}
+.stat .sv.red{color:var(--red);}
+.stat .sv.green{color:var(--green);}
+.stat .diff{font-size:11px;color:var(--muted);margin-top:2px;}
+.stat .diff.green{color:var(--green);}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start;}
+@media(max-width:760px){.layout{grid-template-columns:1fr;}}
+.strat-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--hint);margin-bottom:8px;}
+.hint-text{font-size:11px;color:var(--hint);margin-bottom:12px;}
+.strat-list{display:flex;flex-direction:column;gap:5px;}
+.strat-btn{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;cursor:pointer;text-align:left;width:100%;color:var(--muted);transition:all 0.15s;}
+.strat-btn:hover{border-color:var(--border2);background:var(--surface2);color:var(--text);}
+.strat-btn.active{border-color:var(--green-border);background:var(--green-bg);color:var(--green);}
+.strat-btn .sicon{font-size:16px;flex-shrink:0;}
+.strat-btn .sname{font-size:13px;font-weight:500;display:block;}
+.strat-btn .sdesc{font-size:11px;opacity:0.7;display:block;margin-top:1px;}
+.strat-btn .check{width:16px;height:16px;border-radius:4px;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;font-size:11px;}
+.strat-btn.active .check{background:var(--green);border-color:var(--green);color:#000;}
+.badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:600;letter-spacing:0.5px;margin-left:4px;vertical-align:middle;}
+.badge.easy{background:var(--green-bg);color:var(--green);}
+.badge.med{background:var(--amber-bg);color:var(--amber);}
+.badge.hard{background:var(--red-bg);color:var(--red);}
+.right-col{display:flex;flex-direction:column;gap:16px;}
+.total-panel{background:var(--surface);border:1px solid var(--green-border);border-radius:var(--radius);padding:20px 24px;}
+.tp-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--hint);margin-bottom:16px;}
+.total-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:16px;}
+.total-stat{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 14px;}
+.total-stat.highlight{border:1px solid var(--green-border);}
+.total-stat .tsl{font-size:11px;color:var(--hint);margin-bottom:4px;}
+.total-stat .tsv{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;}
+.total-stat .tsv.green{color:var(--green);}
+.total-stat .tsv.red{color:var(--red);}
+.total-stat .tsub{font-size:11px;color:var(--muted);margin-top:2px;}
+.total-stat .tsub.green{color:var(--green);}
+.breakdown-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.bl-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:6px 10px;background:var(--surface2);border-radius:var(--radius-sm);}
+.bl-row .bl-name{color:var(--muted);display:flex;align-items:center;gap:6px;}
+.bl-row .bl-val{font-family:'DM Mono',monospace;font-weight:500;color:var(--green);}
+.bl-row .bl-val.red{color:var(--red);}
+.note-box{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--blue);line-height:1.6;}
+.strat-accordion{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;}
+.acc-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border);}
+.acc-header:hover{background:var(--surface2);}
+.acc-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;}
+.acc-saving{font-size:13px;font-family:'DM Mono',monospace;color:var(--green);}
+.acc-saving.red{color:var(--red);}
+.acc-body{padding:16px 18px;display:none;}
+.acc-body.open{display:block;}
+.field{margin-bottom:14px;}
+.field:last-child{margin-bottom:0;}
+.field-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.field-label span:first-child{font-size:12px;color:var(--muted);}
+.field-label .fval{font-size:12px;font-weight:500;color:var(--text);font-family:'DM Mono',monospace;}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--border2);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--green);cursor:pointer;transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+.divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.result-row:last-child{border-bottom:none;}
+.result-row .rl{color:var(--muted);}
+.result-row .rv{font-family:'DM Mono',monospace;font-weight:500;color:var(--text);}
+.result-row .rv.green{color:var(--green);}
+.result-row .rv.red{color:var(--red);}
+.mini-saving{background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius-sm);padding:10px 12px;margin-top:10px;font-size:12px;color:var(--green);line-height:1.5;}
+.mini-warn{background:var(--red-bg);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-sm);padding:10px 12px;margin-top:10px;font-size:12px;color:var(--red);line-height:1.5;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--hint);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+.empty-state .ei{font-size:32px;margin-bottom:10px;}
+.footer{text-align:center;padding:28px 20px;font-size:11px;color:var(--hint);border-top:1px solid var(--border);margin-top:40px;}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="logo">🇦🇺</div>
-  <div class="header-text">
+  <div>
     <h1>Aussie Tax Savings Calculator</h1>
-    <p>Estimate your savings from negative gearing & investment strategies</p>
+    <p>Select multiple strategies — combined savings update automatically</p>
   </div>
 </div>
-
-<div class="disclaimer">
-  ⚠️ General information only — not financial or tax advice. Always consult a registered tax accountant before investing.
-</div>
+<div class="disclaimer">⚠️ General information only — not financial or tax advice. Always consult a registered tax accountant before investing.</div>
 
 <div class="main">
-  <div class="two-col">
+  <div class="summary-bar">
+    <div class="income-row">
+      <label>Annual income</label>
+      <input type="range" id="income" min="50000" max="300000" step="1000" value="114000" oninput="onIncomeChange(this.value)">
+      <span class="ival" id="incomeVal">$114,000</span>
+      <label style="margin-left:8px;">Work type</label>
+      <select id="worktype" onchange="recalcAll()">
+        <option value="abn">ABN contractor</option>
+        <option value="employee">Employee (PAYG)</option>
+      </select>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="sl">Original tax / yr</div><div class="sv red" id="s-tax">$31,567</div><div class="diff">before strategies</div></div>
+      <div class="stat"><div class="sl">New tax / yr</div><div class="sv red" id="s-newtax">$31,567</div><div class="diff green" id="s-newdiff"></div></div>
+      <div class="stat"><div class="sl">Total saved / yr</div><div class="sv green" id="s-saved">$0</div><div class="diff green" id="s-savedmonth"></div></div>
+      <div class="stat"><div class="sl">Marginal rate</div><div class="sv" id="s-marginal">37%</div><div class="diff" id="s-effective">eff. 28%</div></div>
+    </div>
+  </div>
 
-    <!-- LEFT: Income + Strategy selector -->
+  <div class="layout">
     <div>
-      <div class="panel" style="margin-bottom:16px;">
-        <div class="panel-title">Your income</div>
-
-        <div class="field">
-          <div class="field-label">
-            <span>Annual income</span>
-            <span class="fval" id="incomeVal">$114,000</span>
-          </div>
-          <input type="range" id="income" min="50000" max="300000" step="1000" value="114000" oninput="onIncomeChange(this.value)">
-        </div>
-
-        <div class="field">
-          <div class="field-label"><span>Work type</span></div>
-          <select id="worktype">
-            <option value="abn">ABN contractor / sole trader</option>
-            <option value="employee">Employee (PAYG)</option>
-          </select>
-        </div>
-
-        <hr class="divider">
-
-        <div class="stat-grid">
-          <div class="stat"><div class="sl">Est. annual tax</div><div class="sv red" id="s-tax">$31,567</div></div>
-          <div class="stat"><div class="sl">Monthly tax</div><div class="sv red" id="s-monthly">$2,630</div></div>
-          <div class="stat"><div class="sl">Marginal rate</div><div class="sv" id="s-marginal">37%</div></div>
-          <div class="stat"><div class="sl">Effective rate</div><div class="sv" id="s-effective">28%</div></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">Pick a strategy</div>
+      <div class="strat-panel">
+        <div class="panel-title">Choose strategies</div>
+        <div class="hint-text">Tick multiple — totals combine automatically ✓</div>
         <div class="strat-list">
-          <button class="strat-btn active" onclick="selectStrat('super')" id="sb-super">
+          <button class="strat-btn" onclick="toggleStrat('super')" id="sb-super">
             <span class="sicon">🏦</span>
-            <div class="sinfo">
-              <span class="sname">Super contributions <span class="badge easy">Easy</span></span>
-              <span class="sdesc">Lowest effort, instant savings</span>
-            </div>
+            <div><span class="sname">Super contributions <span class="badge easy">Easy</span></span><span class="sdesc">Instant tax saving</span></div>
+            <span class="check" id="chk-super"></span>
           </button>
-          <button class="strat-btn" onclick="selectStrat('bizexp')" id="sb-bizexp">
+          <button class="strat-btn" onclick="toggleStrat('bizexp')" id="sb-bizexp">
             <span class="sicon">💼</span>
-            <div class="sinfo">
-              <span class="sname">Business expenses <span class="badge easy">Easy</span></span>
-              <span class="sdesc">ABN deductions you may be missing</span>
-            </div>
+            <div><span class="sname">Business expenses <span class="badge easy">Easy</span></span><span class="sdesc">ABN deductions</span></div>
+            <span class="check" id="chk-bizexp"></span>
           </button>
-          <button class="strat-btn" onclick="selectStrat('shares')" id="sb-shares">
+          <button class="strat-btn" onclick="toggleStrat('shares')" id="sb-shares">
             <span class="sicon">📈</span>
-            <div class="sinfo">
-              <span class="sname">Margin loan + shares <span class="badge med">Medium</span></span>
-              <span class="sdesc">Borrow to invest in ETFs</span>
-            </div>
+            <div><span class="sname">Margin loan + shares <span class="badge med">Medium</span></span><span class="sdesc">Borrow to invest</span></div>
+            <span class="check" id="chk-shares"></span>
           </button>
-          <button class="strat-btn" onclick="selectStrat('property')" id="sb-property">
+          <button class="strat-btn" onclick="toggleStrat('property')" id="sb-property">
             <span class="sicon">🏠</span>
-            <div class="sinfo">
-              <span class="sname">Investment property <span class="badge hard">Complex</span></span>
-              <span class="sdesc">Highest impact, long term</span>
-            </div>
+            <div><span class="sname">Investment property <span class="badge hard">Complex</span></span><span class="sdesc">Highest impact</span></div>
+            <span class="check" id="chk-property"></span>
           </button>
-          <button class="strat-btn" onclick="selectStrat('car')" id="sb-car">
+          <button class="strat-btn" onclick="toggleStrat('car')" id="sb-car">
             <span class="sicon">🚗</span>
-            <div class="sinfo">
-              <span class="sname">Car rental (Turo) <span class="badge med">Medium</span></span>
-              <span class="sdesc">Buy a car, rent it out</span>
-            </div>
+            <div><span class="sname">Car rental (Turo) <span class="badge med">Medium</span></span><span class="sdesc">Rent your car out</span></div>
+            <span class="check" id="chk-car"></span>
           </button>
-          <button class="strat-btn" onclick="selectStrat('cartrading')" id="sb-cartrading">
+          <button class="strat-btn" onclick="toggleStrat('cartrading')" id="sb-cartrading">
             <span class="sicon">🔑</span>
-            <div class="sinfo">
-              <span class="sname">Car trading business <span class="badge hard">Complex</span></span>
-              <span class="sdesc">Buy & sell cars for profit</span>
-            </div>
+            <div><span class="sname">Car trading business <span class="badge hard">Complex</span></span><span class="sdesc">Buy & sell cars</span></div>
+            <span class="check" id="chk-cartrading"></span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: Params + Results -->
     <div class="right-col">
-      <div class="params-panel">
-        <div class="params-title" id="paramsTitle">Strategy settings</div>
-        <div id="paramsBody"></div>
+      <div class="total-panel">
+        <div class="tp-title">Combined tax impact — all selected strategies</div>
+        <div class="total-grid">
+          <div class="total-stat"><div class="tsl">Original annual tax</div><div class="tsv red" id="t-orig">$31,567</div><div class="tsub" id="t-origmonth">$2,631/month</div></div>
+          <div class="total-stat"><div class="tsl">Total deductions</div><div class="tsv green" id="t-deductions">$0</div><div class="tsub">from all strategies</div></div>
+          <div class="total-stat"><div class="tsl">New taxable income</div><div class="tsv" id="t-newinc">$114,000</div></div>
+          <div class="total-stat"><div class="tsl">New annual tax</div><div class="tsv red" id="t-newtax">$31,567</div><div class="tsub" id="t-newmonth"></div></div>
+          <div class="total-stat highlight"><div class="tsl">You save / year</div><div class="tsv green" id="t-saving">$0</div><div class="tsub green" id="t-savingmonth">select a strategy</div></div>
+        </div>
+        <div id="breakdown-list" class="breakdown-list"></div>
+        <div class="note-box">💡 Deductions reduce taxable income. Super & franking credits are direct tax offsets. All figures use 2024–25 ATO rates including 2% Medicare levy.</div>
       </div>
 
-      <div class="result-panel">
-        <div class="params-title">Tax impact breakdown</div>
-        <div id="resultBody"></div>
+      <div id="stratAccordions">
+        <div class="empty-state"><div class="ei">👆</div>Tick one or more strategies on the left to configure settings and see your savings</div>
       </div>
     </div>
-
   </div>
 </div>
 
-<div class="footer">
-  Built for Australian residents. Tax calculations use 2024–25 ATO rates including Medicare levy (2%).<br>
-  Figures are estimates only. Speak to a registered tax accountant or financial adviser before making investment decisions.
-</div>
+<div class="footer">Built for Australian residents · 2024–25 ATO tax rates · Not financial advice · Always consult a registered tax accountant</div>
 
 <script>
-const fmt = n => '$' + Math.abs(Math.round(n)).toLocaleString('en-AU');
-const fmtSigned = n => (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString('en-AU');
-const pct = n => (Math.round(n * 10) / 10) + '%';
+const fmt=n=>'$'+Math.abs(Math.round(n)).toLocaleString('en-AU');
+const pct=n=>(Math.round(n*10)/10)+'%';
+let income=114000;
+let activeStrats=new Set();
 
-let income = 114000;
-let currentStrat = 'super';
-
-function calcTax(inc) {
-  let tax = 0;
-  if (inc <= 18200) tax = 0;
-  else if (inc <= 45000) tax = (inc - 18200) * 0.19;
-  else if (inc <= 120000) tax = 5092 + (inc - 45000) * 0.325;
-  else if (inc <= 180000) tax = 29467 + (inc - 120000) * 0.37;
-  else tax = 51667 + (inc - 180000) * 0.45;
-  return tax + inc * 0.02;
+function calcTax(inc){
+  let t=0;
+  if(inc<=18200)t=0;
+  else if(inc<=45000)t=(inc-18200)*0.19;
+  else if(inc<=120000)t=5092+(inc-45000)*0.325;
+  else if(inc<=180000)t=29467+(inc-120000)*0.37;
+  else t=51667+(inc-180000)*0.45;
+  return t+inc*0.02;
+}
+function getMarginal(inc){
+  if(inc<=18200)return 0;if(inc<=45000)return 19;
+  if(inc<=120000)return 32.5;if(inc<=180000)return 37;return 45;
 }
 
-function getMarginal(inc) {
-  if (inc <= 18200) return 0;
-  if (inc <= 45000) return 19;
-  if (inc <= 120000) return 32.5;
-  if (inc <= 180000) return 37;
-  return 45;
-}
-
-const strats = {
-  super: {
-    title: 'Super contribution settings',
-    params: [
-      { id: 'contrib', label: 'Annual contribution', min: 1000, max: 27500, step: 500, val: 10000, pre: '$' }
+const stratDefs={
+  super:{label:'Super contributions',icon:'🏦',
+    params:[{id:'contrib',label:'Annual contribution',min:1000,max:27500,step:500,val:10000,pre:'$'}],
+    calc:p=>{
+      const m=(getMarginal(income)+2)/100;
+      const saving=p.contrib*(m-0.15);
+      return{incomeDeduction:0,directTaxSaving:saving,
+        rows:[{l:'Contribution',v:fmt(p.contrib)},{l:'Tax inside super',v:'15%'},{l:'Your marginal rate',v:pct(getMarginal(income)+2)},{l:'Tax saved',v:fmt(saving),cls:'green'}],
+        note:`Saving ${pct(getMarginal(income)+2-15)} on every dollar contributed.`,good:true};
+    }},
+  bizexp:{label:'Business expenses',icon:'💼',
+    params:[
+      {id:'homeOfficePct',label:'Home office (% of home)',min:0,max:30,step:5,val:15,suf:'%'},
+      {id:'phonePct',label:'Phone & internet (biz use)',min:20,max:100,step:10,val:70,suf:'%'},
+      {id:'equipment',label:'Equipment & software / yr',min:0,max:10000,step:500,val:3000,pre:'$'},
+      {id:'travel',label:'Work travel / yr',min:0,max:10000,step:500,val:1500,pre:'$'},
+      {id:'training',label:'Training & courses / yr',min:0,max:5000,step:250,val:1000,pre:'$'},
     ],
-    calc: p => {
-      const marginal = getMarginal(income) / 100 + 0.02;
-      const superRate = 0.15;
-      const saving = p.contrib * (marginal - superRate);
-      const newTax = calcTax(income) - saving;
-      return {
-        rows: [
-          { l: 'Your contribution', v: fmt(p.contrib) },
-          { l: 'Tax rate inside super', v: '15%' },
-          { l: 'Your marginal rate incl. Medicare', v: pct(getMarginal(income) + 2) },
-          { l: 'Tax saving per dollar contributed', v: pct(getMarginal(income) + 2 - 15) },
-          { l: 'New annual tax', v: fmt(newTax) },
-          { l: 'Annual tax saved', v: fmt(saving), cls: 'green' },
-          { l: 'Monthly tax saved', v: fmt(saving / 12), cls: 'green' },
-        ],
-        saving,
-        note: `Every $1 you put into super is taxed at 15% instead of your ${getMarginal(income)+2}% rate — saving you ${pct(getMarginal(income)+2-15)} instantly.`,
-        noteType: 'green'
-      };
-    }
-  },
-  bizexp: {
-    title: 'Business expense settings',
-    params: [
-      { id: 'homeOfficePct', label: 'Home office (% of home)', min: 0, max: 30, step: 5, val: 15, suf: '%' },
-      { id: 'phonePct', label: 'Phone & internet (biz use)', min: 20, max: 100, step: 10, val: 70, suf: '%' },
-      { id: 'equipment', label: 'Equipment & software / yr', min: 0, max: 10000, step: 500, val: 3000, pre: '$' },
-      { id: 'travel', label: 'Work travel / yr', min: 0, max: 10000, step: 500, val: 1500, pre: '$' },
-      { id: 'training', label: 'Training & courses / yr', min: 0, max: 5000, step: 250, val: 1000, pre: '$' },
+    calc:p=>{
+      const h=(p.homeOfficePct/100)*20000;
+      const ph=(p.phonePct/100)*2400;
+      const total=h+ph+p.equipment+p.travel+p.training;
+      return{incomeDeduction:total,directTaxSaving:0,
+        rows:[{l:'Home office',v:fmt(h)},{l:'Phone & internet',v:fmt(ph)},{l:'Equipment & software',v:fmt(p.equipment)},{l:'Work travel',v:fmt(p.travel)},{l:'Training & courses',v:fmt(p.training)},{l:'Total deductions',v:fmt(total),cls:'green'}],
+        note:`Reduces taxable income by ${fmt(total)}.`,good:true};
+    }},
+  shares:{label:'Margin loan + shares',icon:'📈',
+    params:[
+      {id:'loan',label:'Loan amount',min:10000,max:300000,step:5000,val:50000,pre:'$'},
+      {id:'loanRate',label:'Interest rate',min:5,max:12,step:0.25,val:8,suf:'%'},
+      {id:'divYield',label:'Dividend yield',min:2,max:7,step:0.25,val:3.5,suf:'%'},
     ],
-    calc: p => {
-      const homeOfficeClaim = (p.homeOfficePct / 100) * 20000;
-      const phoneClaim = (p.phonePct / 100) * 2400;
-      const total = homeOfficeClaim + phoneClaim + p.equipment + p.travel + p.training;
-      const marginal = (getMarginal(income) + 2) / 100;
-      const saving = total * marginal;
-      return {
-        rows: [
-          { l: 'Home office claim', v: fmt(homeOfficeClaim) },
-          { l: 'Phone & internet', v: fmt(phoneClaim) },
-          { l: 'Equipment & software', v: fmt(p.equipment) },
-          { l: 'Work travel', v: fmt(p.travel) },
-          { l: 'Training & courses', v: fmt(p.training) },
-          { l: 'Total deductions', v: fmt(total), cls: 'green' },
-          { l: 'Annual tax saved', v: fmt(saving), cls: 'green' },
-          { l: 'Monthly tax saved', v: fmt(saving / 12), cls: 'green' },
-        ],
-        saving,
-        note: `These ${fmt(total)} in deductions reduce your taxable income directly. Many ABN contractors leave thousands on the table here.`,
-        noteType: 'green'
-      };
-    }
-  },
-  shares: {
-    title: 'Margin loan & shares settings',
-    params: [
-      { id: 'loan', label: 'Loan amount', min: 10000, max: 300000, step: 5000, val: 50000, pre: '$' },
-      { id: 'loanRate', label: 'Interest rate', min: 5, max: 12, step: 0.25, val: 8, suf: '%' },
-      { id: 'divYield', label: 'Dividend yield', min: 2, max: 7, step: 0.25, val: 3.5, suf: '%' },
+    calc:p=>{
+      const interest=p.loan*(p.loanRate/100);
+      const divs=p.loan*(p.divYield/100);
+      const franking=divs*0.43;
+      const loss=Math.max(0,interest-divs);
+      return{incomeDeduction:loss,directTaxSaving:franking,
+        rows:[{l:'Annual interest',v:fmt(interest),cls:'red'},{l:'Dividends received',v:fmt(divs)},{l:'Franking credits',v:fmt(franking),cls:'green'},{l:'Net loss (deductible)',v:loss>0?fmt(loss):'$0 — positively geared',cls:loss>0?'':'red'}],
+        note:loss>0?`${fmt(loss)} loss reduces income. Franking credits ${fmt(franking)} offset tax directly.`:'Positively geared — increase loan rate or lower dividend yield.',good:loss>0};
+    }},
+  property:{label:'Investment property',icon:'🏠',
+    params:[
+      {id:'propVal',label:'Property value',min:200000,max:1500000,step:25000,val:550000,pre:'$'},
+      {id:'deposit',label:'Deposit',min:10,max:30,step:5,val:20,suf:'%'},
+      {id:'propRate',label:'Loan interest rate',min:5,max:9,step:0.25,val:6.5,suf:'%'},
+      {id:'rentalYield',label:'Rental yield',min:2,max:8,step:0.25,val:4,suf:'%'},
     ],
-    calc: p => {
-      const interest = p.loan * (p.loanRate / 100);
-      const divs = p.loan * (p.divYield / 100);
-      const frankingCredits = divs * 0.43;
-      const loss = Math.max(0, interest - divs);
-      const marginal = (getMarginal(income) + 2) / 100;
-      const taxFromLoss = loss * marginal;
-      const totalBenefit = taxFromLoss + frankingCredits;
-      const isNeg = interest > divs;
-      return {
-        rows: [
-          { l: 'Annual interest cost', v: fmt(interest), cls: 'red' },
-          { l: 'Dividends received', v: fmt(divs) },
-          { l: 'Franking credits', v: fmt(frankingCredits), cls: 'green' },
-          { l: 'Net loss (deductible)', v: isNeg ? fmt(loss) : '$0 (positively geared)', cls: isNeg ? '' : 'red' },
-          { l: 'Tax saved from loss', v: fmt(taxFromLoss), cls: 'green' },
-          { l: 'Total benefit incl. franking', v: fmt(totalBenefit), cls: 'green' },
-        ],
-        saving: totalBenefit,
-        note: isNeg
-          ? `Negatively geared — your ${fmt(loss)} loss reduces taxable income, saving ${fmt(taxFromLoss)}. Franking credits add ${fmt(frankingCredits)} more.`
-          : `Positively geared — dividends exceed interest. You\'ll pay tax on the profit. Increase loan rate or reduce dividend yield to negatively gear.`,
-        noteType: isNeg ? 'green' : 'warn'
-      };
-    }
-  },
-  property: {
-    title: 'Investment property settings',
-    params: [
-      { id: 'propVal', label: 'Property value', min: 200000, max: 1500000, step: 25000, val: 550000, pre: '$' },
-      { id: 'deposit', label: 'Deposit', min: 10, max: 30, step: 5, val: 20, suf: '%' },
-      { id: 'propRate', label: 'Loan interest rate', min: 5, max: 9, step: 0.25, val: 6.5, suf: '%' },
-      { id: 'rentalYield', label: 'Rental yield', min: 2, max: 8, step: 0.25, val: 4, suf: '%' },
+    calc:p=>{
+      const loan=p.propVal*(1-p.deposit/100);
+      const interest=loan*(p.propRate/100);
+      const rental=p.propVal*(p.rentalYield/100);
+      const depr=p.propVal*0.025;
+      const costs=rental*0.08+p.propVal*0.005;
+      const totalExp=interest+depr+costs;
+      const loss=Math.max(0,totalExp-rental);
+      return{incomeDeduction:loss,directTaxSaving:0,
+        rows:[{l:'Annual interest',v:fmt(interest),cls:'red'},{l:'Rental income',v:fmt(rental),cls:'green'},{l:'Depreciation',v:fmt(depr)},{l:'Mgmt fees + costs',v:fmt(costs)},{l:'Net loss (deductible)',v:loss>0?fmt(loss):'$0 — positively geared',cls:loss>0?'':'red'}],
+        note:loss>0?`${fmt(loss)} annual loss reduces your taxable income.`:'Positively geared — rental income exceeds expenses.',good:loss>0};
+    }},
+  car:{label:'Car rental (Turo)',icon:'🚗',
+    params:[
+      {id:'carCost',label:'Car purchase price',min:15000,max:80000,step:1000,val:30000,pre:'$'},
+      {id:'carDepositPct',label:'Deposit',min:10,max:50,step:5,val:20,suf:'%'},
+      {id:'rentalDays',label:'Rental days per month',min:3,max:25,step:1,val:12,suf:' days'},
+      {id:'bizUse',label:'Business use',min:30,max:100,step:5,val:70,suf:'%'},
     ],
-    calc: p => {
-      const loan = p.propVal * (1 - p.deposit / 100);
-      const interest = loan * (p.propRate / 100);
-      const rental = p.propVal * (p.rentalYield / 100);
-      const depreciation = p.propVal * 0.025;
-      const mgmtFees = rental * 0.08;
-      const otherCosts = p.propVal * 0.005;
-      const totalExp = interest + depreciation + mgmtFees + otherCosts;
-      const loss = Math.max(0, totalExp - rental);
-      const marginal = (getMarginal(income) + 2) / 100;
-      const saving = loss * marginal;
-      const isNeg = totalExp > rental;
-      return {
-        rows: [
-          { l: 'Loan amount', v: fmt(loan) },
-          { l: 'Annual interest', v: fmt(interest), cls: 'red' },
-          { l: 'Rental income', v: fmt(rental), cls: 'green' },
-          { l: 'Depreciation', v: fmt(depreciation) },
-          { l: 'Management + costs', v: fmt(mgmtFees + otherCosts) },
-          { l: 'Net annual loss', v: isNeg ? fmt(loss) : '$0 (positively geared)', cls: isNeg ? '' : 'red' },
-          { l: 'Annual tax saved', v: fmt(saving), cls: 'green' },
-          { l: 'Monthly tax saved', v: fmt(saving / 12), cls: 'green' },
-        ],
-        saving,
-        note: isNeg
-          ? `Your ${fmt(loss)} annual loss offsets your consulting income, saving ${fmt(saving)}/year. Depreciation is your biggest non-cash deduction.`
-          : `Positively geared — rental income exceeds all expenses. You\'ll owe tax on the ${fmt(rental - totalExp)} profit.`,
-        noteType: isNeg ? 'green' : 'warn'
-      };
-    }
-  },
-  car: {
-    title: 'Turo car rental settings',
-    params: [
-      { id: 'carCost', label: 'Car purchase price', min: 15000, max: 80000, step: 1000, val: 30000, pre: '$' },
-      { id: 'carDepositPct', label: 'Deposit', min: 10, max: 50, step: 5, val: 20, suf: '%' },
-      { id: 'rentalDays', label: 'Rental days per month', min: 3, max: 25, step: 1, val: 12, suf: ' days' },
-      { id: 'bizUse', label: 'Business use', min: 30, max: 100, step: 5, val: 70, suf: '%' },
+    calc:p=>{
+      const loan=p.carCost*(1-p.carDepositPct/100);
+      const interest=loan*0.08;
+      const dailyRate=p.carCost<25000?55:p.carCost<45000?75:100;
+      const netIncome=dailyRate*p.rentalDays*12*0.75;
+      const biz=p.bizUse/100;
+      const depr=Math.min(p.carCost,69674)/5;
+      const totalExp=(interest+depr+2200+900+1200)*biz;
+      const loss=Math.max(0,totalExp-netIncome);
+      return{incomeDeduction:loss,directTaxSaving:0,
+        rows:[{l:'Net Turo income (after fees)',v:fmt(netIncome),cls:'green'},{l:`Claimable expenses (${p.bizUse}%)`,v:fmt(totalExp),cls:'red'},{l:'Net loss (deductible)',v:loss>0?fmt(loss):'$0 — positively geared',cls:loss>0?'':'red'}],
+        note:loss>0?`${fmt(loss)} loss reduces taxable income. Logbook required.`:'Positively geared — rental income exceeds expenses.',good:loss>0};
+    }},
+  cartrading:{label:'Car trading business',icon:'🔑',
+    params:[
+      {id:'numCars',label:'Cars bought & sold / yr',min:1,max:10,step:1,val:4,suf:' cars'},
+      {id:'buyPrice',label:'Average buy price',min:5000,max:60000,step:1000,val:20000,pre:'$'},
+      {id:'sellPrice',label:'Average sell price',min:5000,max:70000,step:1000,val:25000,pre:'$'},
+      {id:'tradingLoan',label:'Loan used for stock',min:0,max:150000,step:5000,val:40000,pre:'$'},
     ],
-    calc: p => {
-      const loan = p.carCost * (1 - p.carDepositPct / 100);
-      const interest = loan * 0.08;
-      const dailyRate = p.carCost < 25000 ? 55 : p.carCost < 45000 ? 75 : 100;
-      const grossIncome = dailyRate * p.rentalDays * 12;
-      const netIncome = grossIncome * 0.75;
-      const biz = p.bizUse / 100;
-      const deprCap = Math.min(p.carCost, 69674);
-      const depreciation = deprCap / 5;
-      const insurance = 2200;
-      const rego = 900;
-      const maintenance = 1200;
-      const totalExp = (interest + depreciation + insurance + rego + maintenance) * biz;
-      const loss = Math.max(0, totalExp - netIncome);
-      const marginal = (getMarginal(income) + 2) / 100;
-      const saving = loss * marginal;
-      const isNeg = totalExp > netIncome;
-      return {
-        rows: [
-          { l: 'Gross Turo income', v: fmt(grossIncome) },
-          { l: 'After Turo fees (25%)', v: fmt(netIncome), cls: 'green' },
-          { l: `Claimable expenses (${p.bizUse}%)`, v: fmt(totalExp), cls: 'red' },
-          { l: 'Net loss (deductible)', v: isNeg ? fmt(loss) : '$0 (positively geared)' },
-          { l: 'Annual tax saved', v: fmt(saving), cls: 'green' },
-          { l: 'Monthly tax saved', v: fmt(saving / 12), cls: 'green' },
-        ],
-        saving,
-        note: isNeg
-          ? `Expenses exceed rental income — negatively geared. Must keep a 12-week logbook to prove ${p.bizUse}% business use to ATO.`
-          : `Rental income exceeds expenses — you\'ll pay tax on ${fmt(netIncome - totalExp)} profit. Reduce rental days or increase business use to negatively gear.`,
-        noteType: isNeg ? 'green' : 'warn'
-      };
-    }
-  },
-  cartrading: {
-    title: 'Car trading business settings',
-    params: [
-      { id: 'numCars', label: 'Cars bought & sold / yr', min: 1, max: 10, step: 1, val: 4, suf: ' cars' },
-      { id: 'buyPrice', label: 'Average buy price', min: 5000, max: 60000, step: 1000, val: 20000, pre: '$' },
-      { id: 'sellPrice', label: 'Average sell price', min: 5000, max: 70000, step: 1000, val: 25000, pre: '$' },
-      { id: 'tradingLoan', label: 'Loan used for stock', min: 0, max: 150000, step: 5000, val: 40000, pre: '$' },
-    ],
-    calc: p => {
-      const revenue = p.numCars * p.sellPrice;
-      const cogs = p.numCars * p.buyPrice;
-      const grossProfit = revenue - cogs;
-      const loanInterest = p.tradingLoan * 0.08;
-      const bizCosts = p.numCars * 800 + 1500;
-      const netProfit = grossProfit - loanInterest - bizCosts;
-      const marginal = (getMarginal(income) + 2) / 100;
-      const extraTax = Math.max(0, netProfit) * marginal;
-      const taxSaved = Math.max(0, -netProfit) * marginal;
-      const isProfitable = netProfit > 0;
-      return {
-        rows: [
-          { l: 'Total revenue', v: fmt(revenue) },
-          { l: 'Cost of stock', v: fmt(cogs), cls: 'red' },
-          { l: 'Gross profit', v: fmt(grossProfit), cls: grossProfit > 0 ? 'green' : 'red' },
-          { l: 'Interest + business costs', v: fmt(loanInterest + bizCosts), cls: 'red' },
-          { l: 'Net taxable profit / loss', v: (netProfit >= 0 ? '' : '-') + fmt(Math.abs(netProfit)), cls: netProfit >= 0 ? 'green' : 'red' },
-          isProfitable
-            ? { l: 'Extra tax owed on profit', v: fmt(extraTax), cls: 'red' }
-            : { l: 'Tax saved from loss', v: fmt(taxSaved), cls: 'green' },
-        ],
-        saving: isProfitable ? -extraTax : taxSaved,
-        note: isProfitable
-          ? `Trading profit adds ${fmt(netProfit)} to your taxable income — you\'ll owe an extra ${fmt(extraTax)} in tax on top of your consulting income.`
-          : `A trading loss of ${fmt(Math.abs(netProfit))} offsets your consulting income, saving ${fmt(taxSaved)} in tax.`,
-        noteType: isProfitable ? 'warn' : 'green'
-      };
-    }
-  }
+    calc:p=>{
+      const revenue=p.numCars*p.sellPrice;
+      const cogs=p.numCars*p.buyPrice;
+      const grossProfit=revenue-cogs;
+      const costs=p.tradingLoan*0.08+p.numCars*800+1500;
+      const netProfit=grossProfit-costs;
+      const isProfit=netProfit>0;
+      return{incomeDeduction:isProfit?-netProfit:Math.abs(netProfit),directTaxSaving:0,
+        rows:[{l:'Revenue',v:fmt(revenue)},{l:'Cost of stock',v:fmt(cogs),cls:'red'},{l:'Gross profit',v:fmt(grossProfit),cls:grossProfit>0?'green':'red'},{l:'Interest + costs',v:fmt(costs),cls:'red'},{l:'Net profit / loss',v:(netProfit>=0?'':'-')+fmt(Math.abs(netProfit)),cls:netProfit>=0?'green':'red'}],
+        note:isProfit?`Trading profit adds ${fmt(netProfit)} to taxable income — extra tax owed.`:`Trading loss of ${fmt(Math.abs(netProfit))} offsets your income.`,good:!isProfit};
+    }}
 };
 
-function getParamVals() {
-  const p = {};
-  const def = strats[currentStrat];
-  def.params.forEach(param => {
-    const el = document.getElementById('p-' + param.id);
-    p[param.id] = el ? parseFloat(el.value) : param.val;
+const paramStore={};
+Object.keys(stratDefs).forEach(id=>{
+  paramStore[id]={};
+  stratDefs[id].params.forEach(p=>{paramStore[id][p.id]=p.val;});
+});
+
+function getResult(id){return stratDefs[id].calc(paramStore[id]);}
+
+function recalcAll(){
+  const origTax=calcTax(income);
+  let totalDeduction=0,totalDirect=0;
+  const breakdown=[];
+  activeStrats.forEach(id=>{
+    const r=getResult(id);
+    totalDeduction+=r.incomeDeduction;
+    totalDirect+=r.directTaxSaving;
+    const m=(getMarginal(income)+2)/100;
+    const s=r.incomeDeduction*m+r.directTaxSaving;
+    breakdown.push({id,label:stratDefs[id].label,icon:stratDefs[id].icon,saving:s,good:r.good});
   });
-  return p;
-}
+  const newIncome=Math.max(0,income-totalDeduction);
+  const newTax=Math.max(0,calcTax(newIncome)-totalDirect);
+  const totalSaved=origTax-newTax;
 
-function renderParams() {
-  const def = strats[currentStrat];
-  document.getElementById('paramsTitle').textContent = def.title;
-  let html = '';
-  def.params.forEach(param => {
-    const pre = param.pre || '';
-    const suf = param.suf || '';
-    const dispVal = pre + (param.step >= 1 ? Math.round(param.val).toLocaleString('en-AU') : param.val) + suf;
-    html += `<div class="field">
-      <div class="field-label">
-        <span>${param.label}</span>
-        <span class="fval" id="pv-${param.id}">${dispVal}</span>
-      </div>
-      <input type="range" id="p-${param.id}" min="${param.min}" max="${param.max}" step="${param.step}" value="${param.val}"
-        oninput="onParamChange('${param.id}', this.value, '${pre}', '${suf}', ${param.step})">
-    </div>`;
-  });
-  document.getElementById('paramsBody').innerHTML = html;
-}
+  document.getElementById('s-tax').textContent=fmt(origTax);
+  document.getElementById('s-newtax').textContent=fmt(newTax);
+  document.getElementById('s-newdiff').textContent=totalSaved>0?'↓ '+fmt(totalSaved)+' less':'';
+  document.getElementById('s-saved').textContent=fmt(Math.max(0,totalSaved));
+  document.getElementById('s-savedmonth').textContent=totalSaved>0?fmt(totalSaved/12)+'/month':'';
+  document.getElementById('s-marginal').textContent=pct(getMarginal(income));
+  document.getElementById('s-effective').textContent='eff. '+pct(origTax/income*100);
 
-function onParamChange(id, val, pre, suf, step) {
-  const num = parseFloat(val);
-  const display = pre + (step >= 1 ? Math.round(num).toLocaleString('en-AU') : num) + suf;
-  document.getElementById('pv-' + id).textContent = display;
-  renderResult();
-}
+  document.getElementById('t-orig').textContent=fmt(origTax);
+  document.getElementById('t-origmonth').textContent=fmt(origTax/12)+'/month';
+  document.getElementById('t-deductions').textContent=fmt(totalDeduction);
+  document.getElementById('t-newinc').textContent=fmt(newIncome);
+  document.getElementById('t-newtax').textContent=fmt(newTax);
+  document.getElementById('t-newmonth').textContent=fmt(newTax/12)+'/month';
+  document.getElementById('t-saving').textContent=fmt(Math.max(0,totalSaved));
+  document.getElementById('t-savingmonth').textContent=totalSaved>0?fmt(totalSaved/12)+'/month saved':'select a strategy';
 
-function renderResult() {
-  const p = getParamVals();
-  const r = strats[currentStrat].calc(p);
-  let rows = r.rows.map(row =>
-    `<div class="result-row"><span class="rl">${row.l}</span><span class="rv ${row.cls || ''}">${row.v}</span></div>`
+  const blEl=document.getElementById('breakdown-list');
+  blEl.innerHTML=breakdown.length===0?'':breakdown.map(b=>
+    `<div class="bl-row"><span class="bl-name">${b.icon} ${b.label}</span><span class="bl-val ${b.saving<0?'red':''}">${b.saving>=0?'+':'-'}${fmt(Math.abs(b.saving))}/yr</span></div>`
   ).join('');
-  let banner = '';
-  if (r.noteType === 'green') {
-    banner = `<div class="savings-banner">
-      <span class="sb-icon">✦</span>
-      <div class="sb-text">
-        <span class="sb-big">${r.saving > 0 ? fmt(r.saving) + '/yr saved' : 'No saving'}</span>
-        ${r.note}
-      </div>
-    </div>`;
-  } else if (r.noteType === 'warn') {
-    banner = `<div class="warning-banner">⚠️ ${r.note}</div>`;
+
+  activeStrats.forEach(id=>{
+    const r=getResult(id);
+    const m=(getMarginal(income)+2)/100;
+    const s=r.incomeDeduction*m+r.directTaxSaving;
+    const el=document.getElementById('acc-saving-'+id);
+    if(el){el.textContent=(s>=0?'saves ':'adds ')+fmt(Math.abs(s))+'/yr';el.className='acc-saving'+(s<0?' red':'');}
+    renderAccRows(id,r);
+  });
+}
+
+function renderAccRows(id,r){
+  const el=document.getElementById('acc-rows-'+id);
+  if(!el)return;
+  const rows=r.rows.map(row=>`<div class="result-row"><span class="rl">${row.l}</span><span class="rv ${row.cls||''}">${row.v}</span></div>`).join('');
+  el.innerHTML=rows+(r.good?`<div class="mini-saving">${r.note}</div>`:`<div class="mini-warn">⚠️ ${r.note}</div>`);
+}
+
+function toggleStrat(id){
+  if(activeStrats.has(id)){
+    activeStrats.delete(id);
+    document.getElementById('sb-'+id).classList.remove('active');
+    document.getElementById('chk-'+id).textContent='';
+  } else {
+    activeStrats.add(id);
+    document.getElementById('sb-'+id).classList.add('active');
+    document.getElementById('chk-'+id).textContent='✓';
   }
-  document.getElementById('resultBody').innerHTML = rows + banner +
-    `<div class="note-banner">💡 These are estimates using 2024–25 ATO rates. Speak to a registered accountant to confirm figures for your exact situation.</div>`;
+  renderAccordions();
+  recalcAll();
 }
 
-function selectStrat(id) {
-  currentStrat = id;
-  document.querySelectorAll('.strat-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('sb-' + id).classList.add('active');
-  renderParams();
-  renderResult();
+function renderAccordions(){
+  const container=document.getElementById('stratAccordions');
+  if(activeStrats.size===0){
+    container.innerHTML='<div class="empty-state"><div class="ei">👆</div>Tick one or more strategies on the left to configure settings and see your savings</div>';
+    return;
+  }
+  let html='';
+  activeStrats.forEach(id=>{
+    const def=stratDefs[id];
+    const r=getResult(id);
+    const m=(getMarginal(income)+2)/100;
+    const s=r.incomeDeduction*m+r.directTaxSaving;
+    const paramsHtml=def.params.map(param=>{
+      const pre=param.pre||'';const suf=param.suf||'';
+      const v=paramStore[id][param.id];
+      const disp=pre+(param.step>=1?Math.round(v).toLocaleString('en-AU'):v)+suf;
+      return `<div class="field"><div class="field-label"><span>${param.label}</span><span class="fval" id="pv-${id}-${param.id}">${disp}</span></div>
+        <input type="range" min="${param.min}" max="${param.max}" step="${param.step}" value="${v}" oninput="onParam('${id}','${param.id}',this.value,'${pre}','${suf}',${param.step})"></div>`;
+    }).join('');
+    html+=`<div class="strat-accordion"><div class="acc-header" onclick="toggleAcc('abody-${id}')">
+      <div class="acc-title">${def.icon} ${def.label}</div>
+      <span class="acc-saving${s<0?' red':''}" id="acc-saving-${id}">${s>=0?'saves ':'adds '}${fmt(Math.abs(s))}/yr</span>
+    </div><div class="acc-body open" id="abody-${id}">${paramsHtml}<div class="divider"></div><div id="acc-rows-${id}"></div></div></div>`;
+  });
+  container.innerHTML=html;
+  activeStrats.forEach(id=>renderAccRows(id,getResult(id)));
 }
 
-function onIncomeChange(val) {
-  income = parseInt(val);
-  document.getElementById('incomeVal').textContent = '$' + income.toLocaleString('en-AU');
-  updateSummary();
-  renderResult();
+function toggleAcc(bodyId){document.getElementById(bodyId).classList.toggle('open');}
+
+function onParam(stratId,paramId,val,pre,suf,step){
+  const num=parseFloat(val);
+  paramStore[stratId][paramId]=num;
+  const disp=pre+(step>=1?Math.round(num).toLocaleString('en-AU'):num)+suf;
+  document.getElementById('pv-'+stratId+'-'+paramId).textContent=disp;
+  recalcAll();
 }
 
-function updateSummary() {
-  const tax = calcTax(income);
-  const effective = (tax / income * 100).toFixed(1);
-  document.getElementById('s-tax').textContent = '$' + Math.round(tax).toLocaleString('en-AU');
-  document.getElementById('s-monthly').textContent = '$' + Math.round(tax / 12).toLocaleString('en-AU');
-  document.getElementById('s-marginal').textContent = getMarginal(income) + '%';
-  document.getElementById('s-effective').textContent = effective + '%';
+function onIncomeChange(val){
+  income=parseInt(val);
+  document.getElementById('incomeVal').textContent='$'+income.toLocaleString('en-AU');
+  recalcAll();
 }
 
-renderParams();
-renderResult();
-updateSummary();
+recalcAll();
 </script>
 </body>
 </html>
